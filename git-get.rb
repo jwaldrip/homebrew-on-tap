@@ -12,10 +12,11 @@ class GitGet < Formula
   depends_on "pkg-config" => :build
   depends_on "cmake" => :build
   depends_on "go" => :build
-  depends_on "git"
+  depends_on "libgit2"
 
   def install
-    system "make", "build"
+    ENV["AUTO_GOPATH"] = "1"
+    system("make build")
     bin.install "./bin/git-get" => "git-get"
   end
 
@@ -38,7 +39,7 @@ class GitGet < Formula
       EOS
     else
       <<-EOS.undent
-      
+
         Be sure to set your GITPATH or GOPATH before using git-get.
 
         EXAMPLE:
