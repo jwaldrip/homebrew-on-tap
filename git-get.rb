@@ -15,8 +15,8 @@ class GitGet < Formula
   depends_on "libgit2"
 
   def install
-    ENV["AUTO_GOPATH"] = "1"
-    system("make build")
+    gopath, _ = FileUtils.mkdir_p(File.join(buildpath, "gopath"))
+    system("GOPATH=#{gopath} make build")
     bin.install "./bin/git-get" => "git-get"
   end
 
