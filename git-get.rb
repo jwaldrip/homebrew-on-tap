@@ -19,9 +19,38 @@ class GitGet < Formula
     bin.install "./bin/git-get" => "git-get"
   end
 
+  def caveats
+    if ENV['GITPATH']
+      <<-EOS.undent
+
+        Your git path is set to `#{ENV['GITPATH']}`. git-get will clone projects
+        to #{ENV['GITPATH']}.
+      EOS
+    elsif ENV['GOPATH']
+      <<-EOS.undent
+
+        Your go path is set to `#{ENV['GOPATH']}`. git-get will clone projects to
+        `#{ENV['GOPATH']}/src` unless you set GITPATH in your environment.
+
+        EXAMPLE:
+        $ echo "export GITPATH=$HOME/dev" > .bashprofile
+
+      EOS
+    else
+      <<-EOS.undent
+      
+        Be sure to set your GITPATH or GOPATH before using git-get.
+
+        EXAMPLE:
+        $ echo "export GITPATH=$HOME/dev" > .bashprofile
+
+      EOS
+    end
+  end
+
   test do
     path = testpath
-    system "GITPATH=#{path}", "#{bin}/git-get", "https://github.com/jwaldrip/git-get.git"
+    Kernel.system({ "GITPATH" => path.to_s }, "#{bin}/git-get", "https://github.com/jwaldrip/git-get.git", out: '/dev/null', err: '/dev/null')
     assert File.exist?("#{path}/github.com/jwaldrip/git-get/.git")
   end
 end
