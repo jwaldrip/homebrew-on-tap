@@ -7,7 +7,6 @@ class GitGet < Formula
   homepage "https://github.com/jwaldrip/git-get"
   head "https://github.com/jwaldrip/git-get.git", branch: "master"
   url "https://github.com/jwaldrip/git-get.git", using: :git, tag: "v#{VERSION}"
-  sha1 "b3d0b4aab175504a9cbb23a0756c6f87d470bfe9"
 
   depends_on "libssh2" => :build
   depends_on "pkg-config" => :build
