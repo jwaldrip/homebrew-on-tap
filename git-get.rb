@@ -12,11 +12,14 @@ class GitGet < Formula
   depends_on "pkg-config" => :build
   depends_on "cmake" => :build
   depends_on "go" => :build
-  depends_on "libgit2"
+  depends_on "git" => :build
 
   def install
-    gopath, _ = FileUtils.mkdir_p(File.join(buildpath, "gopath"))
-    system("GOPATH=#{gopath} make build")
+    ENV["GIT_DIR"] = cached_download/".git" if build.head?
+    ENV["GOBIN"] = bin
+    ENV["GOPATH"] = buildpath
+    ENV["GOHOME"] = buildpath
+    system("make build")
     bin.install "./bin/git-get" => "git-get"
   end
 
