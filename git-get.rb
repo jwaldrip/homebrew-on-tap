@@ -1,60 +1,60 @@
 require "formula"
+require "language/go"
 
 class GitGet < Formula
-  VERSION = "0.1.0"
+  homepage "https://github.com/jwaldrip/git-get/"
+  url "https://github.com/jwaldrip/git-get/archive/v0.1.0.tar.gz"
+  sha1 "a7f287b0292a94673024ea8d009ed2e835807454"
+  head "https://github.com/jwaldrip/git-get.git"
 
-  version VERSION
-  homepage "https://github.com/jwaldrip/git-get"
-  head "https://github.com/jwaldrip/git-get.git", branch: "master"
-  url "https://github.com/jwaldrip/git-get.git", using: :git, tag: "v#{VERSION}"
+  depends_on "openssl"
+  depends_on "libssh2"
 
-  depends_on "libssh2" => :build
+  depends_on "go" => :build
+
+  # For git2go
   depends_on "pkg-config" => :build
   depends_on "cmake" => :build
-  depends_on "go" => :build
-  depends_on "git" => :build
 
-  def install
-    ENV["GIT_DIR"] = cached_download/".git" if build.head?
-    ENV["GOBIN"] = bin
-    ENV["GOPATH"] = buildpath
-    ENV["GOHOME"] = buildpath
-    system("make build")
-    bin.install "./bin/git-get" => "git-get"
+  go_resource "github.com/jwaldrip/odin" do
+    url "https://github.com/jwaldrip/odin.git", tag: "v1.6.0"
   end
 
-  def caveats
-    if ENV['GITPATH']
-      <<-EOS.undent
+  go_resource "github.com/jwaldrip/tint" do
+    url "https://github.com/jwaldrip/tint.git"
+  end
 
-        Your git path is set to `#{ENV['GITPATH']}`. git-get will clone projects
-        to #{ENV['GITPATH']}.
-      EOS
-    elsif ENV['GOPATH']
-      <<-EOS.undent
+  go_resource "github.com/bgentry/speakeasy" do
+    url "https://github.com/bgentry/speakeasy.git",
+      :revision => "5dfe43257d1f86b96484e760f2f0c4e2559089c7"
+  end
 
-        Your go path is set to `#{ENV['GOPATH']}`. git-get will clone projects to
-        `#{ENV['GOPATH']}/src` unless you set GITPATH in your environment.
+  go_resource "github.com/libgit2/git2go" do
+    url "https://github.com/libgit2/git2go.git",
+      :revision => "41008af54cfc2af3a5ea56dff169c95d2b50dda6"
+  end
 
-        EXAMPLE:
-        $ echo "export GITPATH=$HOME/dev" > .bashprofile
+  def install
+    mkdir_p buildpath/"src/github.com/jwaldrip"
+    ln_s buildpath, buildpath/"src/github.com/jwaldrip/git-get"
 
-      EOS
-    else
-      <<-EOS.undent
+    ENV["GOPATH"] = buildpath
+    Language::Go.stage_deps resources, buildpath/"src"
 
-        Be sure to set your GITPATH or GOPATH before using git-get.
+    ENV.append "CGO_CFLAGS", "-I#{buildpath}/src/github.com/libgit2/git2go/vendor/libgit2/include"
+    ENV.append "CGO_LDFLAGS", "-L#{Formula["openssl"].lib} -lssl -lcrypto -lz -liconv -L#{Formula["libssh2"].lib} -lssh2 -L#{buildpath}/src/github.com/libgit2/git2go/vendor/libgit2/build -lgit2"
 
-        EXAMPLE:
-        $ echo "export GITPATH=$HOME/dev" > .bashprofile
-
-      EOS
+    Dir.chdir "src/github.com/libgit2/git2go" do
+      system "make", "install"
     end
+
+    system "go", "build", "-o", "git-get"
+    bin.install "git-get"
   end
 
   test do
-    path = testpath
-    Kernel.system({ "GITPATH" => path.to_s }, "#{bin}/git-get", "https://github.com/jwaldrip/git-get.git", out: '/dev/null', err: '/dev/null')
-    assert File.exist?("#{path}/github.com/jwaldrip/git-get/.git")
+    ENV["GITPATH"] = testpath
+    system "#{bin}/git-get", "https://github.com/jwaldrip/git-get.git"
+    assert File.exist? "github.com/jwaldrip/git-get/.git"
   end
 end
