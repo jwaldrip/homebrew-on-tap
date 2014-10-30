@@ -15,7 +15,12 @@ class GitGet < Formula
   depends_on "git" => :build
 
   def install
+    ENV["GIT_DIR"] = cached_download/".git" if build.head?
+    ENV["GOBIN"] = bin
     ENV["GOPATH"] = buildpath
+    ENV["GOHOME"] = buildpath
+    srcpath, _ = mkdir_p File.join buildpath, "/src/github.com/jwaldrip"
+    ln_s Dir.pwd, File.join(srcpath, 'git-get')
     system("go env")
     system("make build")
     bin.install "./bin/git-get" => "git-get"
