@@ -14,6 +14,8 @@ class GitGet < Formula
   depends_on "go" => :build
   depends_on "git" => :build
 
+  orig_env = ENV.dup
+
   def install
     ENV["GIT_DIR"] = cached_download/".git" if build.head?
     ENV["GOBIN"] = bin
@@ -27,17 +29,17 @@ class GitGet < Formula
   end
 
   def caveats
-    if ENV['GITPATH']
+    if orig_env['GITPATH']
       <<-EOS.undent
 
-        Your git path is set to `#{ENV['GITPATH']}`. git-get will clone projects
-        to #{ENV['GITPATH']}.
+        Your git path is set to `#{orig_env['GITPATH']}`. git-get will clone projects
+        to #{orig_env['GITPATH']}.
       EOS
-    elsif ENV['GOPATH']
+    elsif orig_env['GOPATH']
       <<-EOS.undent
 
-        Your go path is set to `#{ENV['GOPATH']}`. git-get will clone projects to
-        `#{ENV['GOPATH']}/src` unless you set GITPATH in your environment.
+        Your go path is set to `#{orig_env['GOPATH']}`. git-get will clone projects to
+        `#{orig_env['GOPATH']}/src` unless you set GITPATH in your environment.
 
         EXAMPLE:
         $ echo "export GITPATH=$HOME/dev" > .bashprofile
