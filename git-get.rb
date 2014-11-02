@@ -17,7 +17,7 @@ class GitGet < Formula
   ORIG_ENV = ENV.to_hash
 
   def install
-    ENV["GIT_DIR"] = cached_download/".git" if build.head?
+
     ENV["GOBIN"] = bin
     ENV["GOPATH"] = buildpath
     ENV["GOHOME"] = buildpath
