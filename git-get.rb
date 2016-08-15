@@ -28,6 +28,7 @@ class GitGet < Formula
       cd linkpath do
         system("go env")
         system("make build")
+        puts "Built!"
       end
       bin.install File.join(linkpath, 'bin/git-get') => "git-get"
     end
