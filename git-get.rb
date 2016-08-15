@@ -1,7 +1,7 @@
 require "formula"
 
 class GitGet < Formula
-  VERSION = "0.1.0"
+  VERSION = "0.2.0"
 
   version VERSION
   homepage "https://github.com/jwaldrip/git-get"
@@ -10,6 +10,7 @@ class GitGet < Formula
 
   depends_on "libssh2" => :build
   depends_on "pkg-config" => :build
+  depends_on "libgit2" => :build
   depends_on "cmake" => :build
   depends_on "go" => :build
   depends_on "git" => :build
