@@ -1,5 +1,4 @@
 require "formula"
-require "pry"
 
 class GitGet < Formula
   VERSION = "0.3.0"
