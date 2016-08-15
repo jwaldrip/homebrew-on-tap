@@ -1,7 +1,8 @@
 require "formula"
+require "pry"
 
 class GitGet < Formula
-  VERSION = "0.2.0"
+  VERSION = "0.3.0"
 
   version VERSION
   homepage "https://github.com/jwaldrip/git-get"
@@ -18,15 +19,20 @@ class GitGet < Formula
   ORIG_ENV = ENV.to_hash
 
   def install
-
-    ENV["GOBIN"] = bin
-    ENV["GOPATH"] = buildpath
-    ENV["GOHOME"] = buildpath
-    srcpath, _ = mkdir_p File.join buildpath, "/src/github.com/jwaldrip"
-    ln_s Dir.pwd, File.join(srcpath, 'git-get')
-    system("go env")
-    system("make build")
-    bin.install "./bin/git-get" => "git-get"
+    Dir.mktmpdir do |dir|
+      ENV["GOBIN"] = bin
+      ENV["GOPATH"] = dir
+      ENV["GOHOME"] = dir
+      srcpath, _ = mkdir_p File.join dir, '/src/github.com/jwaldrip'
+      linkpath = File.join(srcpath, 'git-get')
+      puts "cp_r #{buildpath.to_s.inspect} #{linkpath.inspect}"
+      cp_r buildpath.to_s, linkpath
+      cd linkpath do
+        system("go env")
+        system("make build")
+      end
+      bin.install File.join(linkpath, 'bin/git-get') => "git-get"
+    end
   end
 
   def caveats
