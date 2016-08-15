@@ -1,7 +1,7 @@
 require "formula"
 
 class GitGet < Formula
-  VERSION = "0.4.0"
+  VERSION = "0.4.1"
 
   version VERSION
   homepage "https://github.com/jwaldrip/git-get"
