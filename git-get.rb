@@ -24,7 +24,7 @@ class GitGet < Formula
       ENV["GOHOME"] = dir
       srcpath, _ = mkdir_p File.join dir, '/src/github.com/jwaldrip'
       linkpath = File.join(srcpath, 'git-get')
-      cp_r buildpath.to_s, linkpath
+      mv buildpath.to_s, linkpath
       cd linkpath do
         system("go env")
         system("make build")
