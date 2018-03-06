@@ -1,19 +1,14 @@
 require "formula"
 
 class GitGet < Formula
-  VERSION = "0.4.1"
+  VERSION = "0.5.0"
 
   version VERSION
   homepage "https://github.com/jwaldrip/git-get"
   head "https://github.com/jwaldrip/git-get.git", branch: "master"
   url "https://github.com/jwaldrip/git-get.git", using: :git, tag: "v#{VERSION}"
 
-  depends_on "libssh2" => :build
-  depends_on "pkg-config" => :build
-  depends_on "libgit2" => :build
-  depends_on "cmake" => :build
   depends_on "go" => :build
-  depends_on "git" => :build
 
   ORIG_ENV = ENV.to_hash
 
