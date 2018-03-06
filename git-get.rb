@@ -9,6 +9,7 @@ class GitGet < Formula
   url "https://github.com/jwaldrip/git-get.git", using: :git, tag: "v#{VERSION}"
 
   depends_on "go" => :build
+  depends_on "dep" => :build
 
   ORIG_ENV = ENV.to_hash
 
