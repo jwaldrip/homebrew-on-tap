@@ -1,9 +1,9 @@
 require "formula"
 
 class GitGet < Formula
-  VERSION = "0.5.0"
-
+  VERSION = "0.5.2"
   version VERSION
+  desc "A way to clone git repos into a common path"
   homepage "https://github.com/jwaldrip/git-get"
   head "https://github.com/jwaldrip/git-get.git", branch: "master"
   url "https://github.com/jwaldrip/git-get.git", using: :git, tag: "v#{VERSION}"
@@ -11,33 +11,30 @@ class GitGet < Formula
   depends_on "go" => :build
   depends_on "dep" => :build
 
-  ORIG_ENV = ENV.to_hash
+  ORIG_ENV = ENV.to_h
 
   def install
-    Dir.mktmpdir do |dir|
-      ENV["GOBIN"] = bin
-      ENV["GOPATH"] = dir
-      ENV["GOHOME"] = dir
-      srcpath, _ = mkdir_p File.join dir, '/src/github.com/jwaldrip'
-      linkpath = File.join(srcpath, 'git-get')
-      cp_r buildpath.to_s, linkpath
-      cd linkpath do
-        system("go env")
-        system("make build")
-        bin.install './bin/git-get' => "git-get"
-      end
+    ENV["GOPATH"] = buildpath
+    contents = Dir["{*,.git,.gitignore}"]
+    (buildpath/"src/github.com/jwaldrip/git-get").install contents
+
+    ENV.prepend_create_path "PATH", buildpath/"bin"
+
+    cd "src/github.com/jwaldrip/git-get" do
+      system "make build"
+      bin.install './bin/git-get' => "git-get"
     end
   end
 
   def caveats
     if ORIG_ENV['GITPATH']
-      <<-EOS.undent
+      <<-EOS
 
         Your git path is set to `#{ORIG_ENV['GITPATH']}`. git-get will clone projects
         to #{ORIG_ENV['GITPATH']}.
       EOS
     elsif ORIG_ENV['GOPATH']
-      <<-EOS.undent
+      <<-EOS
 
         Your go path is set to `#{ORIG_ENV['GOPATH']}`. git-get will clone projects to
         `#{ORIG_ENV['GOPATH']}/src` unless you set GITPATH in your environment.
