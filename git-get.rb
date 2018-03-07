@@ -1,7 +1,7 @@
 require "formula"
 
 class GitGet < Formula
-  VERSION = "0.5.2"
+  VERSION = "0.5.3"
   version VERSION
   desc "A way to clone git repos into a common path"
   homepage "https://github.com/jwaldrip/git-get"
