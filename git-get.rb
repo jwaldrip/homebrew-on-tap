@@ -28,13 +28,13 @@ class GitGet < Formula
 
   def caveats
     if ORIG_ENV['GITPATH']
-      <<-EOS
+      <<~EOS
 
         Your git path is set to `#{ORIG_ENV['GITPATH']}`. git-get will clone projects
         to #{ORIG_ENV['GITPATH']}.
       EOS
     elsif ORIG_ENV['GOPATH']
-      <<-EOS
+      <<~EOS
 
         Your go path is set to `#{ORIG_ENV['GOPATH']}`. git-get will clone projects to
         `#{ORIG_ENV['GOPATH']}/src` unless you set GITPATH in your environment.
@@ -44,7 +44,7 @@ class GitGet < Formula
 
       EOS
     else
-      <<-EOS.undent
+      <<~EOS
 
         Be sure to set your GITPATH or GOPATH before using git-get.
 
