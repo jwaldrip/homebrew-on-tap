@@ -20,7 +20,7 @@ class Fastpass < Formula
 
   def install
     ENV["TRAVIS_TAG"] = TAG unless build.head?
-    system 'shards build --release'
+    system 'shards build'
     bin.install "bin/fastpass"
   end
 end
