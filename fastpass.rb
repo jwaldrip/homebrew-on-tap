@@ -17,7 +17,7 @@ class Fastpass < Formula
   depends_on "libevent"
   depends_on "llvm@5"
   depends_on "pcre"
-  depends_on "gmp" # std uses it but it's not linked
+  depends_on "gmp"
 
   def install
     bin.install "fastpass"
