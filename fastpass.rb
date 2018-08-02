@@ -15,7 +15,6 @@ class Fastpass < Formula
   depends_on 'libyaml'
   depends_on 'bdw-gc'
   depends_on "libevent"
-  depends_on "llvm@5"
   depends_on "pcre"
   depends_on "gmp"
 
