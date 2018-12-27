@@ -4,14 +4,15 @@ require "formula"
 class Fastpass < Formula
   LATEST_RELEASE = JSON.parse(Net::HTTP.get(URI("https://api.github.com/repos/jwaldrip/fastpass/releases/latest")))
   TAG = LATEST_RELEASE["tag_name"]
-  pp LATEST_RELEASE
-  URL = LATEST_RELEASE["assets"].find { |asset| asset["name"].include? "osx" }["browser_download_url"]
+  ASSETS = LATEST_RELEASE["assets"]
+  URL = ASSETS ? ASSETS.find { |asset| asset["name"].include? "osx" }["browser_download_url"] : ""
 
   version TAG.sub(/^v/, '')
   homepage 'https://github.com/jwaldrip/fastpass'
   head 'https://github.com/jwaldrip/fastpass.git', branch: 'master'
   url URL
 
+  depends_on 'crystal-lang' => :build
   depends_on 'openssl'
   depends_on 'libyaml'
   depends_on 'bdw-gc'
@@ -20,6 +21,11 @@ class Fastpass < Formula
   depends_on "gmp"
 
   def install
-    bin.install "fastpass"
+    if build.head?
+      system 'shards build --production'
+      bin.install "bin/fastpass"
+    else
+      bin.install "fastpass"
+    end
   end
 end
