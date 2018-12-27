@@ -3,7 +3,7 @@ require "formula"
 
 class Fastpass < Formula
   LATEST_RELEASE = JSON.parse(Net::HTTP.get(URI("https://api.github.com/repos/jwaldrip/fastpass/releases/latest")))
-  TAG = LATEST_RELEASE["tag_name"]
+  TAG = LATEST_RELEASE["tag_name"] || ""
   ASSETS = LATEST_RELEASE["assets"]
   URL = ASSETS ? ASSETS.find { |asset| asset["name"].include? "osx" }["browser_download_url"] : ""
 
