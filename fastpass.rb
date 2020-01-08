@@ -5,12 +5,11 @@ class Fastpass < Formula
   LATEST_RELEASE = JSON.parse(Net::HTTP.get(URI("https://api.github.com/repos/jwaldrip/fastpass/releases/latest")))
   TAG = LATEST_RELEASE["tag_name"] || "unknown"
   ASSETS = LATEST_RELEASE["assets"]
-  URL = ASSETS ? (ASSETS.find { |asset| asset["name"].include? "osx" } || {})["browser_download_url"] : "http://example.com"
 
   version TAG.sub(/^v/, '')
   homepage 'https://github.com/jwaldrip/fastpass'
   head 'https://github.com/jwaldrip/fastpass.git', branch: 'master'
-  url URL
+  url 'https://github.com/psykube/psykube.git', using: :git, tag: TAG
 
   depends_on 'crystal'
 
