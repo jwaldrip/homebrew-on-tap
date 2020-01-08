@@ -13,11 +13,7 @@ class Fastpass < Formula
   depends_on 'crystal'
 
   def install
-    if build.head?
-      system 'shards build --production'
-      bin.install "bin/fastpass"
-    else
-      bin.install "fastpass"
-    end
+    system 'shards build --production'
+    bin.install "bin/fastpass"
   end
 end
