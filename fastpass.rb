@@ -8,7 +8,7 @@ class Fastpass < Formula
   version TAG.sub(/^v/, '')
   homepage 'https://github.com/jwaldrip/fastpass'
   head 'https://github.com/jwaldrip/fastpass.git', branch: 'master'
-  url 'https://github.com/psykube/psykube.git', using: :git, tag: TAG
+  url 'https://github.com/jwaldrip/fastpass.git', using: :git, tag: TAG
 
   depends_on 'crystal'
 
