@@ -12,13 +12,7 @@ class Fastpass < Formula
   head 'https://github.com/jwaldrip/fastpass.git', branch: 'master'
   url URL
 
-  depends_on 'crystal-lang' => :build
-  depends_on 'openssl'
-  depends_on 'libyaml'
-  depends_on 'bdw-gc'
-  depends_on "libevent"
-  depends_on "pcre"
-  depends_on "gmp"
+  depends_on 'crystal'
 
   def install
     if build.head?
