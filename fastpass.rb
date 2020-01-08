@@ -3,7 +3,7 @@ require "formula"
 
 class Fastpass < Formula
   LATEST_RELEASE = JSON.parse(Net::HTTP.get(URI("https://api.github.com/repos/jwaldrip/fastpass/releases/latest")))
-  TAG = LATEST_RELEASE&["tag_name"]
+  TAG = LATEST_RELEASE && LATEST_RELEASE["tag_name"]
 
   version TAG&.sub /^v/, ''
   homepage 'https://github.com/jwaldrip/fastpass'
